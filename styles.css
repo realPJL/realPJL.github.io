@@ -8,10 +8,32 @@ a:visited {
 a:hover, a:active {
     color: #ffd700;
 }
-body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: #222; }
-#game-container { display: flex; align-items: flex-start; height: 800px; position: relative; gap: 64px;}
-canvas { border: 2px solid #fff; }
-#disclaimer { position: absolute; top: 10px; left: 10px; color: white; font-family: Arial; font-size: 12px; }
+body { 
+    margin: 0; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
+    background: #222; 
+}
+#game-container { 
+    display: flex; 
+    align-items: flex-start; 
+    height: 800px; 
+    position: relative; 
+    gap: 64px;
+}
+canvas { 
+    border: 2px solid #fff; 
+}
+#disclaimer { 
+    position: absolute; 
+    top: 10px; 
+    left: 10px; 
+    color: white; 
+    font-family: Arial; 
+    font-size: 12px; 
+}
 #controls-box {
     background: rgba(30,30,30,0.95);
     color: #fff;
