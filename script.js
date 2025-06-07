@@ -22,9 +22,9 @@ function preload() {
     hurtSound = loadSound("hurt.wav");
     winSound = loadSound("win.wav");
 
-    if (shootSound) shootSound.setVolume(0.08);
-    if (hurtSound) hurtSound.setVolume(0.08);
-    if (winSound) winSound.setVolume(0.08);
+    if (shootSound) shootSound.setVolume(0.05);
+    if (hurtSound) hurtSound.setVolume(0.05);
+    if (winSound) winSound.setVolume(0.05);
 }
 
 function setup() {
