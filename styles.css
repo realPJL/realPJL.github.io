@@ -96,3 +96,11 @@ canvas {
     background: #222;
     border: 1px solid #444;
 }
+#credits {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: white;
+    font-family: Arial;
+    font-size: 12px;
+}
