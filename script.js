@@ -193,7 +193,7 @@ class Player {
     }
 
     shoot() {
-    this.bullets.push(new Bullet(this.x, this.y));
+    this.bullets.push(new Bullet(this.x + this.size / 2, this.y));
     }
 
     hits(obj) {
@@ -232,17 +232,17 @@ class Bullet {
     show() {
     push();
     translate(this.x, this.y);
-    rotate(radians(-45));
+    rotate(radians(45));
     image(bulletImg, 0, 0, this.size, this.size);
     pop();
     }
 
     move() {
-    this.y -= this.speed;
+    this.x += this.speed;
     }
 
     offscreen() {
-    return this.y < 0;
+    return this.x > width;
     }
 
     hits(enemy) {
