@@ -8,6 +8,8 @@ let timer = 60;
 let playerImg, enemyImg, lootImg, bulletImg, extractionImg;
 let shootSound;
 let hurtSound;
+let winSound;
+let mute = false;
 
 function preload() {
     playerImg = loadImage("arc_waiter_v1.png")
@@ -18,6 +20,11 @@ function preload() {
 
     shootSound = loadSound("shoot.wav");
     hurtSound = loadSound("hurt.wav");
+    winSound = loadSound("win.wav");
+
+    if (shootSound) shootSound.setVolume(0.08);
+    if (hurtSound) hurtSound.setVolume(0.08);
+    if (winSound) winSound.setVolume(0.08);
 }
 
 function setup() {
@@ -46,6 +53,7 @@ function draw() {
     fill(255);
     textSize(16);
     text(`Score: ${score}  Time: ${ceil(timer)}`, 20, 20);
+    text(mute ? "Muted (M to unmute)" : "Sound On (M to mute)", width - 180, 20);
 
     if (gameState === 'start') {
         fill(30, 30, 30, 230);
@@ -57,7 +65,7 @@ function draw() {
         textSize(24);
         text("A fan-made tribute", width / 2, height / 2 - 40);
         textSize(20);
-        text("Press SPACE to Start", width / 2, height / 2 + 20);
+        text("Press SPACE to go Topside", width / 2, height / 2 + 20);
         textSize(16);
         return;
     }
@@ -76,7 +84,7 @@ function draw() {
             enemy.move();
             if (player.hits(enemy) && !player.invincible) {
                 player.health -= 1;
-                if (hurtSound) hurtSound.play();
+                if (!mute && hurtSound) hurtSound.play();
                 player.invincible = true;
                 player.invincibleTimer = 60;
                 if (player.health <= 0) {
@@ -96,6 +104,7 @@ function draw() {
         extraction.show();
         if (player.hits(extraction)) {
             gameState = 'win';
+            if (!mute && winSound) winSound.play();
         }
 
         if (player.invincible) {
@@ -108,12 +117,13 @@ function draw() {
     } else if (gameState === 'gameover') {
         textSize(32);
         textAlign(CENTER);
-        text('Game Over! Press R to Restart', width / 2, height / 2);
-        text(`Score: ${score}  Time: ${ceil(60 - timer)}`, width / 2, height / 2 + 40);
+        text('Game Over! You didn\'t make it...', width / 2, height / 2);
+        text("Press R to Restart", width / 2, height / 2 + 40);
+        text(`Score: ${score}  Time: ${ceil(60 - timer)}`, width / 2, height / 2 + 80);
     } else if (gameState === 'win') {
         textSize(32);
         textAlign(CENTER);
-        text("You Escaped!", width / 2, height / 2 - 40);
+        text("You made it back to Speranza!", width / 2, height / 2 - 40);
         text(`Score: ${score}  Time: ${ceil(60 - timer)}`, width / 2, height / 2);
         text(`Health Remaining: ${player.health}`, width / 2, height / 2 + 80);
         text("Press R to Restart", width / 2, height / 2 + 40);
@@ -152,6 +162,10 @@ function keyPressed() {
         extraction = new Extraction(random(width), random(height));
     }
 
+    if (key === 'm') {
+        mute = !mute;
+    }
+
     if (keyCode === SHIFT) {
         player.sprinting = !player.sprinting;
     }
@@ -163,7 +177,7 @@ class Player {
         this.y = y;
         this.size = 50;
         this.baseSpeed = 3;
-        this.sprintSpeed = 4.25;
+        this.sprintSpeed = 5.25;
         this.speed = this.baseSpeed;
         this.health = 3;
         this.bullets = [];
@@ -220,7 +234,7 @@ class Player {
     }
 
     shoot() {
-        if (shootSound) shootSound.play();
+        if (!mute && shootSound) shootSound.play();
         this.bullets.push(new Bullet(this.x + this.size / 2, this.y));
     }
 
