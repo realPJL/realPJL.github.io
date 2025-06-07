@@ -3,39 +3,7 @@
 <head>
   <title>ARC Waiters</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
-  <style>
-    body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: #222; }
-    #game-container { display: flex; align-items: flex-start; height: 800px; position: relative; gap: 64px;}
-    canvas { border: 2px solid #fff; }
-    #disclaimer { position: absolute; top: 10px; left: 10px; color: white; font-family: Arial; font-size: 12px; }
-    #controls-box {
-      background: rgba(30,30,30,0.95);
-      color: #fff;
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-      border: 1px solid #888;
-      border-radius: 8px;
-      padding: 16px 20px;
-      min-width: 180px;
-      box-shadow: 0 2px 8px #0008;
-      margin-top: auto;
-      margin-bottom: auto;
-    }
-    #controls-box h3 {
-      margin-top: 0;
-      font-size: 16px;
-      margin-bottom: 10px;
-      text-align: center;
-      letter-spacing: 1px;
-    }
-    #controls-box ul {
-      padding-left: 18px;
-      margin: 0;
-    }
-    #controls-box li {
-      margin-bottom: 6px;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div id="disclaimer">ARC Waiters: A fan-made tribute, not affiliated with Embark Studios. Will close when ARC Raiders releases.</div>
@@ -47,6 +15,15 @@
         <li><b>Shift</b>: Sprint (Toggle)</li>
         <li><b>Space</b>: Shoot</li>
         <li><b>R</b>: Restart</li>
+      </ul>
+    </div>
+    <div id="legend-box">
+      <ul>
+        <li><img src="arc_waiter_v1.png" width="28" style="vertical-align:middle;"> Player</li>
+        <li><img src="arc_v1.png" width="28" style="vertical-align:middle;"> Enemy</li>
+        <li><img src="lootBox.png" width="28" style="vertical-align:middle;"> Loot</li>
+        <li><img src="extraction.png" width="28" style="vertical-align:middle;"> Extraction</li>
+        <li><img src="bullet.png" width="28" style="vertical-align:middle;"> Bullet</li>
       </ul>
     </div>
   </div>
