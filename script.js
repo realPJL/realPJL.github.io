@@ -3,7 +3,7 @@ let enemies = [];
 let loots = [];
 let extraction;
 let score = 0;
-let gameState = 'playing';
+let gameState = 'start';
 let timer = 60; // 2-minute rounds
 let playerImg, enemyImg, lootImg;
 let shootSound;
@@ -44,6 +44,21 @@ function draw() {
     fill(255);
     textSize(16);
     text(`Score: ${score}  Time: ${ceil(timer)}`, 20, 20);
+
+    if (gameState === 'start') {
+        fill(30, 30, 30, 230);
+        rect(0, 0, width, height);
+        textAlign(CENTER, CENTER);
+        fill(255);
+        textSize(48);
+        text("ARC Waiters", width / 2, height / 2 - 80);
+        textSize(24);
+        text("A fan-made tribute", width / 2, height / 2 - 40);
+        textSize(20);
+        text("Press SPACE to Start", width / 2, height / 2 + 20);
+        textSize(16);
+        return;
+    }
 
     if (gameState === 'playing') {
         timer -= 1 / 60;
@@ -103,6 +118,11 @@ function draw() {
 }
 
 function keyPressed() {
+    if (gameState === 'start' && keyCode === 32) {
+        gameState = 'playing';
+        return;
+    }
+
     if (keyCode === 32) { // Spacebar to shoot
         player.shoot();
     }
