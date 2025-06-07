@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ARC Waiters</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+  <style>
+    body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: #222; }
+    canvas { border: 2px solid #fff; }
+    #disclaimer { position: absolute; top: 10px; left: 10px; color: white; font-family: Arial; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div id="disclaimer">ARC Waiters: A fan-made tribute, not affiliated with Embark Studios. Will close when ARC Raiders releases.</div>
+  <script>
+    let player;
+    let enemies = [];
+    let loots = [];
+    let extraction;
+    let score = 0;
+    let gameState = 'playing';
+    let timer = 120; // 2-minute rounds
+    let playerImg, enemyImg;
+
+    function preload() {
+        playerImg = loadImage("arc_waiter_v1.png")
+        enemyImg = loadImage("arc_v1.png");
+    }
+
+    function setup() {
+        imageMode(CENTER);
+        createCanvas(800, 600);
+        player = new Player(width / 2, height / 2);
+        for (let i = 0; i < 5; i++) {
+            enemies.push(new Enemy(random(width), random(height)));
+        }
+        for (let i = 0; i < 10; i++) {
+            loots.push(new Loot(random(width), random(height)));
+        }
+        extraction = new Extraction(random(width), random(height));
+    }
+
+    function draw() {
+      background(50);
+      fill(255);
+      textSize(16);
+      text(`Score: ${score}  Time: ${ceil(timer)}`, 10, 20);
+
+      if (gameState === 'playing') {
+        timer -= 1 / 60;
+        if (timer <= 0) {
+          gameState = 'gameover';
+        }
+
+        player.show();
+        player.move();
+
+        for (let enemy of enemies) {
+          enemy.show();
+          enemy.move();
+          if (player.hits(enemy)) {
+            player.health -= 1;
+            if (player.health <= 0) {
+              gameState = 'gameover';
+            }
+          }
+        }
+
+        for (let i = loots.length - 1; i >= 0; i--) {
+          loots[i].show();
+          if (player.hits(loots[i])) {
+            score += 10;
+            loots.splice(i, 1);
+          }
+        }
+
+        extraction.show();
+        if (player.hits(extraction)) {
+          gameState = 'win';
+        }
+      } else if (gameState === 'gameover') {
+        textSize(32);
+        textAlign(CENTER);
+        text('Game Over! Press R to Restart', width / 2, height / 2);
+      } else if (gameState === 'win') {
+        textSize(32);
+        textAlign(CENTER);
+        text(`You Escaped! Score: ${score}  Press R to Restart`, width / 2, height / 2);
+      }
+    }
+
+    function keyPressed() {
+      if (keyCode === 32) { // Spacebar to shoot
+        player.shoot();
+      }
+      if (key === 'r' && (gameState === 'gameover' || gameState === 'win')) {
+        score = 0;
+        timer = 120;
+        gameState = 'playing';
+        player = new Player(width / 2, height / 2);
+        enemies = [];
+        loots = [];
+        for (let i = 0; i < 5; i++) {
+          enemies.push(new Enemy(random(width), random(height)));
+        }
+        for (let i = 0; i < 10; i++) {
+          loots.push(new Loot(random(width), random(height)));
+        }
+        extraction = new Extraction(random(width), random(height));
+      }
+      if (keyCode === SHIFT) {
+        player.sprinting = !player.sprinting;
+      }
+    }
+
+    class Player {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = 50;
+        this.baseSpeed = 3;
+        this.sprintSpeed = 4.25;
+        this.speed = this.baseSpeed;
+        this.health = 3;
+        this.bullets = [];
+        this.sprinting = false;
+      }
+
+      show() {
+        image(playerImg, this.x, this.y, this.size, this.size);
+        for (let i = this.bullets.length - 1; i >= 0; i--) {
+          this.bullets[i].show();
+          this.bullets[i].move();
+          if (this.bullets[i].offscreen()) {
+            this.bullets.splice(i, 1);
+          } else {
+            for (let j = enemies.length - 1; j >= 0; j--) {
+              if (this.bullets[i] && this.bullets[i].hits(enemies[j])) {
+                enemies.splice(j, 1);
+                this.bullets.splice(i, 1);
+                break;
+              }
+            }
+          }
+        }
+      }
+
+      move() {
+        this.speed = this.sprinting ? this.sprintSpeed : this.baseSpeed;
+        if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) this.x -= this.speed;
+        if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) this.x += this.speed;
+        if (keyIsDown(UP_ARROW) || keyIsDown(87)) this.y -= this.speed;
+        if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) this.y += this.speed;
+        this.x = constrain(this.x, this.size / 2, width - this.size / 2);
+        this.y = constrain(this.y, this.size / 2, height - this.size / 2);
+      }
+
+      shoot() {
+        this.bullets.push(new Bullet(this.x, this.y));
+      }
+
+      hits(obj) {
+        let d = dist(this.x, this.y, obj.x, obj.y);
+        return d < this.size / 2 + obj.size / 2;
+      }
+    }
+
+    class Bullet {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.speed = 10;
+        this.size = 5;
+      }
+
+      show() {
+        fill(255, 255, 0);
+        ellipse(this.x, this.y, this.size);
+      }
+
+      move() {
+        this.y -= this.speed;
+      }
+
+      offscreen() {
+        return this.y < 0;
+      }
+
+      hits(enemy) {
+        let d = dist(this.x, this.y, enemy.x, enemy.y);
+        return d < this.size / 2 + enemy.size / 2;
+      }
+    }
+
+    class Enemy {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = 60;
+        this.speed = 2;
+      }
+
+      show() {
+        image(enemyImg, this.x, this.y, this.size, this.size);
+      }
+
+      move() {
+        let angle = atan2(player.y - this.y, player.x - this.x);
+        this.x += cos(angle) * this.speed;
+        this.y += sin(angle) * this.speed;
+      }
+    }
+
+    class Loot {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = 10;
+      }
+
+      show() {
+        fill(0, 255, 255);
+        rect(this.x, this.y, this.size, this.size);
+      }
+    }
+
+    class Extraction {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = 20;
+      }
+
+      show() {
+        fill(255, 255, 255);
+        ellipse(this.x, this.y, this.size);
+      }
+    }
+  </script>
+</body>
+</html>
