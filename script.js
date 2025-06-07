@@ -6,6 +6,7 @@ let score = 0;
 let gameState = 'playing';
 let timer = 60; // 2-minute rounds
 let playerImg, enemyImg, lootImg;
+let shootSound;
 
 function preload() {
     playerImg = loadImage("arc_waiter_v1.png")
@@ -13,6 +14,8 @@ function preload() {
     lootImg = loadImage("lootBox.png");
     bulletImg = loadImage("bullet.png");
     extractionImg = loadImage("extraction.png");
+
+    shootSound = loadSound("shoot.wav");
 }
 
 function setup() {
@@ -194,7 +197,8 @@ class Player {
     }
 
     shoot() {
-    this.bullets.push(new Bullet(this.x + this.size / 2, this.y));
+        if (shootSound) shootSound.play();
+        this.bullets.push(new Bullet(this.x + this.size / 2, this.y));
     }
 
     hits(obj) {
