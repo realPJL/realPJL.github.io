@@ -109,7 +109,7 @@ function keyPressed() {
 
     if (key === 'r' && (gameState === 'gameover' || gameState === 'win')) {
         score = 0;
-        timer = 120;
+        timer = 60;
         gameState = 'playing';
         player = new Player(width / 2, height / 2);
         enemies = [];
