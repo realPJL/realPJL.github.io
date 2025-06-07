@@ -1,3 +1,13 @@
+a {
+    color: #fff;
+    text-decoration: underline;
+}
+a:visited {
+    color: #fff;
+}
+a:hover, a:active {
+    color: #ffd700;
+}
 body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: #222; }
 #game-container { display: flex; align-items: flex-start; height: 800px; position: relative; gap: 64px;}
 canvas { border: 2px solid #fff; }
