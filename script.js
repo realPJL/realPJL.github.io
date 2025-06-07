@@ -4,7 +4,7 @@ let loots = [];
 let extraction;
 let score = 0;
 let gameState = 'playing';
-let timer = 120; // 2-minute rounds
+let timer = 60; // 2-minute rounds
 let playerImg, enemyImg, lootImg;
 
 function preload() {
@@ -88,11 +88,12 @@ function draw() {
     textSize(32);
     textAlign(CENTER);
     text('Game Over! Press R to Restart', width / 2, height / 2);
+    text(`Score: ${score}  Time: ${ceil(60 - timer)}`, width / 2, height / 2 + 40);
     } else if (gameState === 'win') {
     textSize(32);
     textAlign(CENTER);
     text("You Escaped!", width / 2, height / 2 - 40);
-    text(`Score: ${score}  Time: ${ceil(120 - timer)}`, width / 2, height / 2);
+    text(`Score: ${score}  Time: ${ceil(60 - timer)}`, width / 2, height / 2);
     text(`Health Remaining: ${player.health}`, width / 2, height / 2 + 80);
     text("Press R to Restart", width / 2, height / 2 + 40);
     }
