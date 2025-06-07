@@ -65,6 +65,7 @@
         enemyImg = loadImage("arc_v1.png");
         lootImg = loadImage("lootBox.png");
         bulletImg = loadImage("bullet.png");
+        extractionImg = loadImage("extraction.png");
     }
 
     function setup() {
@@ -319,12 +320,11 @@
       constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.size = 20;
+        this.size = 70;
       }
 
       show() {
-        fill(255, 255, 255);
-        ellipse(this.x, this.y, this.size);
+        image(extractionImg, this.x, this.y, this.size, this.size);
       }
     }
   </script>
