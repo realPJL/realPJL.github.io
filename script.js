@@ -4,9 +4,10 @@ let loots = [];
 let extraction;
 let score = 0;
 let gameState = 'start';
-let timer = 60; // 2-minute rounds
-let playerImg, enemyImg, lootImg;
+let timer = 60; 
+let playerImg, enemyImg, lootImg, bulletImg, extractionImg;
 let shootSound;
+let hurtSound;
 
 function preload() {
     playerImg = loadImage("arc_waiter_v1.png")
@@ -16,6 +17,7 @@ function preload() {
     extractionImg = loadImage("extraction.png");
 
     shootSound = loadSound("shoot.wav");
+    hurtSound = loadSound("hurt.wav");
 }
 
 function setup() {
@@ -74,8 +76,9 @@ function draw() {
             enemy.move();
             if (player.hits(enemy) && !player.invincible) {
                 player.health -= 1;
+                if (hurtSound) hurtSound.play();
                 player.invincible = true;
-                player.invincibleTimer = 60; // 1 second of invincibility
+                player.invincibleTimer = 60;
                 if (player.health <= 0) {
                     gameState = 'gameover';
                 }
